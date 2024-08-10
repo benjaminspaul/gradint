@@ -5,7 +5,7 @@
 # cantonese.py - Python functions for processing Cantonese transliterations
 # (uses eSpeak and Gradint for help with some of them)
 
-# v1.46 (c) 2013-15,2017-23 Silas S. Brown.  License: GPL
+# v1.48 (c) 2013-15,2017-24 Silas S. Brown.  License: GPL
 
 cache = {} # to avoid repeated eSpeak runs,
 # zi -> jyutping or (pinyin,) -> translit
@@ -100,6 +100,7 @@ u"\u4E2D":{"zhong1":"zung1","zhong4":"zung3"},
 u"\u4E3A\u70BA":{"wei2":"wai4","wei4":"wai6"},
 u"\u4E50\u6A02":{"le4":"lok6","yue4":"ngok6"},
 u"\u4EB2\u89AA":{"qin1":"can1","qing4":"can3"},
+u"\u4EC0":{"shen2":"sam6","shi2":"sap6"}, # unless zaap6
 u"\u4F20\u50B3":{"chuan2":"cyun4","zhuan4":"zyun6"},
 u"\u4FBF":{"bian4":"bin6","pian2":"pin4"},
 u"\u5047":{"jia3":"gaa2","jia4":"gaa3"},
@@ -236,7 +237,10 @@ def jyutping_to_yale_u8(j): # returns space-separated syllables
       z = re.sub(re.escape(x)+r"(.)",r"\1"+y,z)
     return z
   if type(u"")==type(""): U=str # Python 3
-  else: U=unicode # Python 2
+  else: # Python 2
+    def U(x):
+      try: return x.decode('utf-8') # might be an emoji pass-through
+      except: return x # already Unicode
   return unicodedata.normalize('NFC',mysub(U(jyutping_to_yale_TeX(j).replace(r"\i{}","i").replace(r"\I{}","I")),[(r"\`",u"\u0300"),(r"\'",u"\u0301"),(r"\=",u"\u0304")])).encode('utf-8')
 
 def superscript_digits_TeX(j):

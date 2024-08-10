@@ -47,7 +47,8 @@ otherLanguages = ["cant","ko","jp"]
 # able to tell the difference between cant_en.wav and an
 # ordinary English prompt and might use it wrongly.
 
-possible_otherLanguages = ["cant","ko","jp","en","zh"]
+possible_otherLanguages = ["cant","ko","jp","en","zh",
+                           "zhy","zh-yue"]
 
 # You can also fill in otherFirstLanguages below
 # (using the same ["item","item"] format) to
@@ -95,7 +96,7 @@ prefer_espeak = "en"
 # "zh" for Zhongwen (Mandarin).
 #    - You can improve eSpeak's English by installing
 #    Festival's dictionary and using lexconvert to convert
-#    it, see http://ssb22.user.srcf.net/gradint/lexconvert.html
+#    it, see http://ssb22.user.srcf.net/lexconvert/
 #    (this has already been done in the bundled version).
 #    - eSpeak is not very natural-sounding, but it is very
 #    clear and accurate in English and some other languages

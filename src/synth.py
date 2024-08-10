@@ -672,6 +672,7 @@ class ESpeakSynth(Synth):
               foundLetter=0
               if l.startswith(B("Translate ")):
                   toAppend=l[l.index(B("'"))+1:-1].replace(LB("\xc3\xbc"),B("v"))
+                  if toAppend==LB("\xc2\xa0"): continue # stray no-break space (don't let this interfere with being able to do partials)
                   if not (checkIn(toAppend,en_words) and r and toAppend==r[-1]):
                     # TODO what about partial English words? e.g. try "kao3 testing" - translate 'testing' results in a translate of 'test' also (which assumes it's already in en mode), resulting in a spurious word "test" added to the text box; not sure how to pick this up without parsing the original text and comparing with the Replace rules that occurred
                     r.append(toAppend)
@@ -1162,7 +1163,7 @@ def abspath_from_start(p): # for just_synthesize to check for paths relative to 
     os.chdir(d)
     return r
 
-def just_synthesize(callSanityCheck=0,lastLang_override=None):
+def just_synthesize(callGeneralCheck=0,lastLang_override=None):
     # Handle the justSynthesize setting (see advanced.txt)
     global startAnnouncement,endAnnouncement,logFile,synth_partials_cache
     synth_partials_cache = {} # to stop 'memory leak' when running from the GUI
@@ -1197,7 +1198,7 @@ def just_synthesize(callSanityCheck=0,lastLang_override=None):
                 r = repr(l[0])
                 if r[:1]=="b": r=r[1:]
                 show_warning("Assuming that %s is a word to synthesize in language '%s'" % (r,lastLanguage))
-                if callSanityCheck and sanityCheck(l[0],lastLanguage,1): return
+                if callGeneralCheck and generalCheck(l[0],lastLanguage,1): return
                 event = checkCanSynth("!synth:"+S(l[0])+"_"+S(lastLanguage))
                 if not event: continue # couldn't synth
                 called_synth = 1
@@ -1217,10 +1218,10 @@ def just_synthesize(callSanityCheck=0,lastLang_override=None):
                         lastLanguage=lang ; continue
                     # otherwise, user might have omitted lang by mistake
                     show_warning("Assuming %s was meant to be synthesized in language '%s'" % (cond(B('#') in B(justSynthesize) or len(repr(line))<10,"that '"+repr(line)+"'","this line"),lastLanguage))
-                    if callSanityCheck and sanityCheck(line,lastLanguage,1): return
+                    if callGeneralCheck and generalCheck(line,lastLanguage,1): return
                     event = checkCanSynth("!synth:"+S(line)+"_"+S(lastLanguage))
                 else:
-                    if callSanityCheck and sanityCheck(text,lang,1): return
+                    if callGeneralCheck and generalCheck(text,lang,1): return
                     event = checkCanSynth(fname)
                     lastLanguage = lang
                 if not event: continue

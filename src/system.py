@@ -63,7 +63,7 @@ if winsound:
         try: ctypes.cdll.commdlg
         except: WMstandard = True
 
-if macsound and __name__=="__main__": os.system("clear 1>&2") # so warnings etc start with a clear terminal (1>&2 just in case using stdout for something else)
+if macsound and __name__=="__main__": os.system("clear >&2") # so warnings etc start with a clear terminal (>&2 just in case using stdout for something else)
 if riscos_sound: sys.stderr.write("Loading Gradint...\n") # in case it takes a while
 
 try: import androidhelper as android
@@ -224,7 +224,7 @@ if not fileExists(configFiles[0]):
 
 # directory should be OK by now
 if sys.platform.find("ymbian")>-1: sys.path.insert(0,os.getcwd()+os.sep+"lib")
-import time,sched,sndhdr,random,math,pprint,codecs
+import time,sched,random,math,pprint,codecs
 
 def exc_info(inGradint=True):
     import sys # in case it's been gc'd
